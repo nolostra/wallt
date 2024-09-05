@@ -1,0 +1,34 @@
+import { Server } from "@hapi/hapi";
+import { registerRoutes } from "./routes/authRoutes";
+
+// Initialize Hapi server
+const server: Server = new Server({
+  port: 3001,
+  host: "localhost",
+  debug: {
+    request: ["error"],
+  },
+});
+
+// Register the routes
+registerRoutes(server);
+
+// Function to start the server
+const init = async () => {
+  try {
+    await server.start();
+    console.log(`Auth Service running on port ${server.info.uri}`);
+  } catch (err) {
+    console.error("Error starting server:", err);
+    process.exit(1);
+  }
+};
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err: Error) => {
+  console.error(err);
+  process.exit(1);
+});
+
+// Start the server
+init();

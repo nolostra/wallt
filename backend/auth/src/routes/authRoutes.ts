@@ -21,6 +21,7 @@ export const registerRoutes = (server: Server) => {
       },
     },
     handler: async (request: Request, h: ResponseToolkit) => {
+      console.log(request.payload);
       const { email, password } = request.payload as {
         email: string;
         password: string;
@@ -103,37 +104,38 @@ export const registerRoutes = (server: Server) => {
   });
 
   // Token Validation Middleware
-  server.auth.scheme("jwt", () => {
-    return {
-      authenticate: async (request: Request, h: ResponseToolkit) => {
-        const authorization = request.headers.authorization;
+  // server.auth.scheme("jwt", () => {
+  //   return {
+  //     authenticate: async (request: Request, h: ResponseToolkit) => {
+  //       const authorization = request.headers.authorization;
 
-        if (!authorization) {
-          throw h.unauthenticated({
-            message: "No authorization header provided",
-            name: "NoAuthorizationHeader",
-          });
-        }
+  //       if (!authorization) {
+  //         throw h.unauthenticated({
+  //           message: "No authorization header provided",
+  //           name: "NoAuthorizationHeader",
+  //         });
+  //       }
 
-        const token = authorization.split(" ")[1];
+  //       const token = authorization.split(" ")[1];
 
-        try {
-            const decoded = jwt.verify(token, SECRET_KEY);
+  //       try {
+  //         const decoded = jwt.verify(token, SECRET_KEY);
 
-            // Ensure the credentials are an object
-            const credentials = typeof decoded === 'string' ? { token: decoded } : decoded as JwtPayload;
-    
-            return h.authenticated({ credentials });
-        } catch (err) {
-          throw h.unauthenticated({
-            message: "Invalid token",
-            name: "InvalidToken",
-          });
-        }
-      },
-    };
-  });
+  //         // Ensure the credentials are an object
+  //         const credentials = typeof decoded === 'string' ? { token: decoded } : decoded as JwtPayload;
 
-  server.auth.strategy("jwt", "jwt");
-  server.auth.default("jwt");
+  //         return h.authenticated({ credentials });
+  //       } catch (err) {
+  //         throw h.unauthenticated({
+  //           message: "Invalid token",
+  //           name: "InvalidToken",
+  //         });
+  //       }
+  //     },
+  //   };
+  // });
+
+  // // Apply JWT authentication only to protected routes
+  // server.auth.strategy("jwt", "jwt");
+  // server.auth.default("jwt");
 };

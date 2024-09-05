@@ -1,5 +1,6 @@
 import { Server } from "@hapi/hapi";
 import { registerRoutes } from "./routes/authRoutes";
+import { sequelize, testConnection } from "./config/db";
 
 // Initialize Hapi server
 const server: Server = new Server({
@@ -17,6 +18,8 @@ registerRoutes(server);
 const init = async () => {
   try {
     await server.start();
+    await testConnection();
+    await sequelize.sync({ force: false });
     console.log(`Auth Service running on port ${server.info.uri}`);
   } catch (err) {
     console.error("Error starting server:", err);

@@ -5,8 +5,8 @@ interface PreferenceAttributes {
   id: number;
   userId: number; // Foreign key referencing the user, but no association
   name: string;
-  hobbies: string[];
-  skills: string[];
+  hobbies: string[]; // JSON array
+  skills: string[];  // JSON array
   teach: string;
   dob: Date;
   learn: string;
@@ -16,7 +16,7 @@ type PreferenceCreationAttributes = Optional<PreferenceAttributes, 'id'>;
 
 export class Preference extends Model<PreferenceAttributes, PreferenceCreationAttributes> 
   implements PreferenceAttributes {
-  public id!: number;
+  public id!: number; 
   public userId!: number; // Reference to User from Auth service
   public name!: string;
   public hobbies!: string[];
@@ -46,11 +46,11 @@ Preference.init(
       allowNull: false,
     },
     hobbies: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.JSON, // Changed from ARRAY to JSON
       allowNull: false,
     },
     skills: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.JSON, // Changed from ARRAY to JSON
       allowNull: false,
     },
     teach: {
@@ -69,5 +69,6 @@ Preference.init(
   {
     sequelize,
     tableName: 'preferences',
+    timestamps: true, // Automatically add createdAt and updatedAt fields
   }
 );

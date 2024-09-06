@@ -73,11 +73,11 @@ export const registerPlayRoutes = async (server: Server) => {
     handler: async (request: Request, h: ResponseToolkit) => {
       const { name, hobbies, skills, teach, dob, learn } =
         request.payload as any;
-      const userId = (request.auth.credentials as any).id;
+      const userEmail = (request.auth.credentials as any).email;
 
       try {
         const newPreference = await Preference.create({
-          userId,
+          userEmail,
           name,
           hobbies,
           skills,
@@ -107,10 +107,10 @@ export const registerPlayRoutes = async (server: Server) => {
       auth: "jwt",
     },
     handler: async (request: Request, h: ResponseToolkit) => {
-      const userId = (request.auth.credentials as any).id;
+      const userEmail = (request.auth.credentials as any).email;
 
       try {
-        const preferences = await Preference.findOne({ where: { userId } });
+        const preferences = await Preference.findOne({ where: { userEmail } });
 
         if (!preferences) {
           return h.response({ message: "No preferences found" }).code(404);
@@ -134,14 +134,14 @@ export const registerPlayRoutes = async (server: Server) => {
     },
     handler: async (request: Request, h: ResponseToolkit) => {
       // Extract `userId` from the JWT token
-      const userId = (request.auth.credentials as JwtPayload).id;
+      const userEmail = (request.auth.credentials as JwtPayload).email;
 
-      if (!userId) {
+      if (!userEmail) {
         return h.response({ message: "User ID not found in token" }).code(400);
       }
 
       try {
-        const userPref = await Preference.findOne({ where: { userId } });
+        const userPref = await Preference.findOne({ where: { userEmail } });
 
         if (!userPref) {
           return h
@@ -154,7 +154,7 @@ export const registerPlayRoutes = async (server: Server) => {
         // Fetch similar profiles
         const similarProfiles = await Preference.findAll({
           where: {
-            userId: { [Op.ne]: userId },
+            userEmail: { [Op.ne]: userEmail},
             [Op.or]: [
               literal(`JSON_OVERLAPS(hobbies, :userHobbies)`),
               literal(`JSON_OVERLAPS(skills, :userSkills)`),

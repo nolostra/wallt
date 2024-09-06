@@ -3,7 +3,7 @@ import { sequelize } from '../config/db'; // Assuming sequelize instance is in c
 
 interface PreferenceAttributes {
   id: number;
-  userId: number; // Foreign key referencing the user, but no association
+  userEmail: string; // Foreign key referencing the user, but no association
   name: string;
   hobbies: string[]; // JSON array
   skills: string[];  // JSON array
@@ -17,7 +17,7 @@ type PreferenceCreationAttributes = Optional<PreferenceAttributes, 'id'>;
 export class Preference extends Model<PreferenceAttributes, PreferenceCreationAttributes> 
   implements PreferenceAttributes {
   public id!: number; 
-  public userId!: number; // Reference to User from Auth service
+  public userEmail!: string; // Reference to User from Auth service
   public name!: string;
   public hobbies!: string[];
   public skills!: string[];
@@ -37,8 +37,8 @@ Preference.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    userId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+    userEmail: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     name: {

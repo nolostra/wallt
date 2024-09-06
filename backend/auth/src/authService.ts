@@ -9,6 +9,13 @@ const server: Server = new Server({
   debug: {
     request: ["error"],
   },
+  routes: {
+    cors: {
+      origin: ["*"], // Allow all origins, adjust as needed
+      headers: ["Accept", "Authorization", "Content-Type", "If-None-Match"], // Allowed headers
+      credentials: true, // Allow credentials
+    },
+  },
 });
 
 // Register the routes
@@ -19,7 +26,7 @@ const init = async () => {
   try {
     await server.start();
     await testConnection();
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     console.log(`Auth Service running on port ${server.info.uri}`);
   } catch (err) {
     console.error("Error starting server:", err);

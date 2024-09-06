@@ -31,7 +31,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const storedUser = localStorage.getItem(USER_KEY);
       const storedToken = localStorage.getItem(TOKEN_KEY);
       if (storedUser) {
-        setUser(JSON.parse(storedUser)); // Placeholder, replace with actual user data
+        console.log("User data retrieved from localStorage:", storedUser);
+        // setUser(JSON.parse(storedUser)); // Placeholder, replace with actual user data
       }
       if (storedToken) {
         setToken(storedToken);
@@ -62,9 +63,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setUser(null);
-
-      router.push(ROUTES.LOGIN); // Ensure router.push is called only after component mounts
+    router.push(ROUTES.LOGIN); // Ensure router.push is called only after component mounts
 
   };
 

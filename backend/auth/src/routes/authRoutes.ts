@@ -97,6 +97,9 @@ export const registerRoutes = (server: Server) => {
   server.route({
     method: "POST",
     path: "/logout",
+    options: {
+      auth: "jwt", // Apply JWT authentication to this route
+    },
     handler: async (request: Request, h: ResponseToolkit) => {
       // Invalidate token on frontend (usually done client-side)
       return h.response({ message: "Logged out successfully" }).code(200);
@@ -104,36 +107,36 @@ export const registerRoutes = (server: Server) => {
   });
 
   // Token Validation Middleware
-  // server.auth.scheme("jwt", () => {
-  //   return {
-  //     authenticate: async (request: Request, h: ResponseToolkit) => {
-  //       const authorization = request.headers.authorization;
+  server.auth.scheme("jwt", () => {
+    return {
+      authenticate: async (request: Request, h: ResponseToolkit) => {
+        const authorization = request.headers.authorization;
 
-  //       if (!authorization) {
-  //         throw h.unauthenticated({
-  //           message: "No authorization header provided",
-  //           name: "NoAuthorizationHeader",
-  //         });
-  //       }
+        if (!authorization) {
+          throw h.unauthenticated({
+            message: "No authorization header provided",
+            name: "NoAuthorizationHeader",
+          });
+        }
 
-  //       const token = authorization.split(" ")[1];
+        const token = authorization.split(" ")[1];
 
-  //       try {
-  //         const decoded = jwt.verify(token, SECRET_KEY);
+        try {
+          const decoded = jwt.verify(token, SECRET_KEY);
 
-  //         // Ensure the credentials are an object
-  //         const credentials = typeof decoded === 'string' ? { token: decoded } : decoded as JwtPayload;
+          // Ensure the credentials are an object
+          const credentials = typeof decoded === 'string' ? { token: decoded } : decoded as JwtPayload;
 
-  //         return h.authenticated({ credentials });
-  //       } catch (err) {
-  //         throw h.unauthenticated({
-  //           message: "Invalid token",
-  //           name: "InvalidToken",
-  //         });
-  //       }
-  //     },
-  //   };
-  // });
+          return h.authenticated({ credentials });
+        } catch (err) {
+          throw h.unauthenticated({
+            message: "Invalid token",
+            name: "InvalidToken",
+          });
+        }
+      },
+    };
+  });
 
   // // Apply JWT authentication only to protected routes
   // server.auth.strategy("jwt", "jwt");

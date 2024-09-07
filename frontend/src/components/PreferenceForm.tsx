@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { addPreference } from '@/lib/api';
+import React, { useState, useEffect } from 'react';
+import { addPreference, fetchPreferences } from '@/lib/api';
 import { Preference } from '@/types';
 
 // Define the structure of form errors
@@ -18,10 +18,30 @@ const PreferenceForm: React.FC = () => {
     learn: '',
   });
 
-  // State for form errors and submission status
+  // State for form errors, submission status, and loading state
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // For loading preferences
+
+  // Fetch preferences on component mount
+  useEffect(() => {
+    const loadPreferences = async () => {
+      try {
+        const fetchedPreferences = await fetchPreferences();
+        console.log("fetchedPreferences",fetchedPreferences);
+        
+          setPreference(fetchedPreferences); // Assuming you want to load the first preference
+       
+      } catch (error) {
+        console.error('Failed to fetch preferences:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPreferences();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -74,6 +94,10 @@ const PreferenceForm: React.FC = () => {
       }
     }
   };
+
+  if (isLoading) {
+    return <p>Loading preferences...</p>; // Display a loading message while fetching preferences
+  }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">

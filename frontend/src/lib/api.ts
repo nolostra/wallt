@@ -96,3 +96,12 @@ export const getSimilarProfiles = async (): Promise<Profile[]> => {
   });
   return response.data;
 };
+
+
+export const fetchPreferences = async (): Promise<Preference> => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const response = await play_api.get<Preference>("/preferences", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+}

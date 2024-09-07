@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
     // Check if the user is logged in by checking for a token in localStorage
     const token = localStorage.getItem(TOKEN_KEY);
     setIsLoggedIn(!!token); // Set to true if token exists
-  }, []);
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     localStorage.removeItem(TOKEN_KEY); // Clear token from localStorage

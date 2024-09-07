@@ -35,7 +35,7 @@ const SimilarProfiles: React.FC = () => {
         <p className="mt-1 max-w-2xl text-sm text-gray-500">People with similar interests</p>
       </div>
       <ul className="divide-y divide-gray-200">
-        {profiles.map((profile) => (
+        {profiles.length > 0 ? profiles.map((profile) => (
           <li key={profile.id} className="px-4 py-4 sm:px-6">
             {/* <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-indigo-600 truncate">{profile.name}</p>
@@ -61,8 +61,11 @@ const SimilarProfiles: React.FC = () => {
               </div>
             </div> */}
           </li>
-        ))}
+        ))
+      : <div className="text-center">No similar profiles found.</div>
+      }
       </ul>
+
     </div>
   );
 };

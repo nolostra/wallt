@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setUser(null);
-    console.log("auth logout called")
+    
     router.push(ROUTES.LOGIN); // Ensure router.push is called only after component mounts
     
   };

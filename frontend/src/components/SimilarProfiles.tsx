@@ -11,6 +11,7 @@ const SimilarProfiles: React.FC = () => {
     const fetchSimilarProfiles = async () => {
       try {
         const fetchedProfiles = await getSimilarProfiles();
+        console.log("fetchedProfiles",fetchedProfiles);
         setProfiles(fetchedProfiles);
       } catch (err) {
         setError('Failed to load similar profiles. Please try again later.');

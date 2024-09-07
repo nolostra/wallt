@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+import { toast } from "sonner"; 
 import "@/app/globals.css";
 import { useAuth } from "@/contexts/AuthContext";
 const Login: React.FC = () => {
@@ -11,8 +11,10 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await login(email, password);
+      toast.success("Login successful");
     } catch (error) {
       console.error("Login failed:", error);
+      toast.error("Login failed");
     }
   };
 

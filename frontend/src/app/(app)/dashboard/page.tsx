@@ -6,6 +6,8 @@ import PreferenceForm from "@/components/PreferenceForm";
 import Profile from "@/components/Profile";
 import SimilarProfiles from "@/components/SimilarProfiles";
 import { TOKEN_KEY } from "@/config";
+import { useAuth } from "@/contexts/AuthContext";
+import { setLogoutHandler } from "@/lib/api";
 const Home: React.FC = () => {
   const router = useRouter();
 
@@ -15,6 +17,13 @@ const Home: React.FC = () => {
       router.push("/login");
     }
   }, [router]);
+
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    // Set the global logout function for use in API interceptors
+    setLogoutHandler(logout);
+  }, [logout]);
 
   return (
     <div className="container mx-auto px-4">

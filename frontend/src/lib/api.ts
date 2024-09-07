@@ -2,34 +2,39 @@
 import axios, { AxiosInstance } from "axios";
 import { User, Preference, Profile } from "../types";
 import { TOKEN_KEY, USER_KEY } from "@/config";
-import { useAuth } from "@/contexts/AuthContext";
 
 const auth_api: AxiosInstance = axios.create({
   baseURL: "http://localhost:3001", // Replace with your actual API URL
 });
+// eslint-disable-next-line react-hooks/rules-of-hooks
 
 const play_api: AxiosInstance = axios.create({
-  baseURL: process.env.API_PLAY_URL, // Replace with your actual API URL
+  baseURL: "http://localhost:3002", // Replace with your actual API URL
 });
 
-export const logout = async () => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  const response = await auth_api.post("/logout", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
+// export const logout = async () => {
+//   const token = localStorage.getItem(TOKEN_KEY);
+//   const response = await auth_api.post("/logout", {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+//   return response.data;
+// };
+let globalLogout: (() => void) | null = null;
+
+export const setLogoutHandler = (logout: () => void) => {
+  globalLogout = logout;
 };
+
+// Interceptor for handling 401 Unauthorized errors
 const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.response.use(
-    (response) => {
-      return response; // Proceed with the response if successful
-    },
-    (error) => {
+    (response) => response, // Proceed if successful
+    async (error) => {
       if (error.response && error.response.status === 401) {
-        // Handle 401 Unauthorized error
         console.log("Unauthorized access - logging out...");
-        const { logout } = useAuth();
-        logout();
+        if (globalLogout) {
+          globalLogout(); // Call the logout function if it's defined
+        }
       }
       return Promise.reject(error);
     }

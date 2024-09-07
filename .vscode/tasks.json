@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build-play",
+        "type": "shell",
+        "command": "npm",
+        "args": [
+          "run",
+          "build"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$tsc"],
+        "detail": "Build Play Service"
+      },
+      {
+        "label": "build-auth",
+        "type": "shell",
+        "command": "npm",
+        "args": [
+          "run",
+          "build"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$tsc"],
+        "detail": "Build Auth Service"
+      }
+    ]
+  }
+  

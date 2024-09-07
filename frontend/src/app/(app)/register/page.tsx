@@ -4,6 +4,7 @@ import { register } from "@/lib/api";
 import "@/app/globals.css";
 import { toast } from "sonner"; // Import Bounce
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -70,6 +71,12 @@ const Login: React.FC = () => {
             >
               Register
             </button>
+
+            <Link href="/login">
+            <button className="w-full bg-blue-500 text-white font-semibold p-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out shadow-lg mt-5">
+              Already have Account ? login
+            </button>
+          </Link>
           </form>
         </div>
       </div>

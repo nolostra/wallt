@@ -26,7 +26,7 @@ const init = async () => {
   try {
     await server.start();
     await testConnection();
-    await sequelize.sync({ force: true }); // Synchronize models with database
+    await sequelize.sync({ force: false }); // Synchronize models with database
     console.log(`Play Service running on port ${server.info.uri}`);
   } catch (err) {
     console.error("Error starting server:", err);

@@ -1,27 +1,49 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { TOKEN_KEY } from '@/config';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { TOKEN_KEY } from "@/config";
+import { logout } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const router = useRouter(); // Get router instance
 
   useEffect(() => {
-    // Check if the user is logged in by checking for a token in localStorage
-    const token = localStorage.getItem(TOKEN_KEY);
-    setIsLoggedIn(!!token); // Set to true if token exists
-  }, [isLoggedIn]);
+    // Function to check if user is logged in
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem(TOKEN_KEY);
+      setIsLoggedIn(!!token); // Update state based on the presence of token
+    };
 
-  const handleLogout = () => {
-    localStorage.removeItem(TOKEN_KEY); // Clear token from localStorage
-    setIsLoggedIn(false); // Update state to reflect the user is logged out
+    // Check login status on component mount
+    checkLoginStatus();
+
+    // Optional: Set up an event listener or other mechanism if needed to handle token changes
+    window.addEventListener("storage", checkLoginStatus); // Handles changes from other tabs
+
+    return () => {
+      // Cleanup event listener
+      window.removeEventListener("storage", checkLoginStatus);
+    };
+  }, []); // Empty dependency array to run only on mount
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Make sure logout function is awaited if it's async
+      localStorage.removeItem(TOKEN_KEY); // Clear token from localStorage
+      setIsLoggedIn(false); // Update state to reflect the user is logged out
+      router.push("/login"); // Redirect to login page
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
     <nav className="bg-gray-800 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href={isLoggedIn ? '/dashboard' : '/login'}>
+        <Link href={isLoggedIn ? "/dashboard" : "/login"}>
           <p className="text-xl font-bold cursor-pointer">Profile App</p>
         </Link>
         <div className="flex items-center">

@@ -1,7 +1,6 @@
 "use client";
-import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
-import { AuthProvider} from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import React from "react";
 
 interface LayoutProps {
@@ -14,7 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <AuthProvider>
         <body>
           <Toaster position="bottom-right" />
-          <Navbar />
+
           <main>{children}</main>
         </body>
       </AuthProvider>

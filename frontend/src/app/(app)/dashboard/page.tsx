@@ -8,6 +8,7 @@ import SimilarProfiles from "@/components/SimilarProfiles";
 import { TOKEN_KEY } from "@/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { setLogoutHandler } from "@/lib/api";
+import Navbar from "@/components/Navbar";
 const Home: React.FC = () => {
   const router = useRouter();
 
@@ -26,16 +27,19 @@ const Home: React.FC = () => {
   }, [logout]);
 
   return (
-    <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-4">Welcome to Your Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <PreferenceForm />
-          <Profile />
+    <>
+      <Navbar />
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold mb-4">Welcome to Your Dashboard</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <PreferenceForm />
+            <Profile />
+          </div>
+          <SimilarProfiles />
         </div>
-        <SimilarProfiles />
       </div>
-    </div>
+    </>
   );
 };
 

@@ -12,13 +12,13 @@ const play_api: AxiosInstance = axios.create({
   baseURL: "http://localhost:3002", // Replace with your actual API URL
 });
 
-// export const logout = async () => {
-//   const token = localStorage.getItem(TOKEN_KEY);
-//   const response = await auth_api.post("/logout", {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-//   return response.data;
-// };
+export const logout = async () => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const response = await auth_api.post("/logout", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 let globalLogout: (() => void) | null = null;
 
 export const setLogoutHandler = (logout: () => void) => {
@@ -60,6 +60,9 @@ export const login = async (
     user: response.data.user,
   };
 };
+
+
+
 
 export const register = async (
   email: string,

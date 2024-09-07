@@ -76,25 +76,52 @@ export const registerPlayRoutes = async (server: Server) => {
       const userEmail = (request.auth.credentials as any).email;
 
       try {
-        const newPreference = await Preference.create({
-          userEmail,
-          name,
-          hobbies,
-          skills,
-          teach,
-          dob,
-          learn,
+        // Check if a preference already exists for the user
+        const existingPreference = await Preference.findOne({
+          where: { userEmail },
         });
 
-        return h
-          .response({
-            message: "Preference added successfully",
-            preference: newPreference,
-          })
-          .code(201);
+        if (existingPreference) {
+          // If preference exists, update it
+          const updatedPreference = await existingPreference.update({
+            name,
+            hobbies,
+            skills,
+            teach,
+            dob,
+            learn,
+          });
+
+          return h
+            .response({
+              message: "Preference updated successfully",
+              preference: updatedPreference,
+            })
+            .code(200);
+        } else {
+          // If no preference exists, create a new one
+          const newPreference = await Preference.create({
+            userEmail,
+            name,
+            hobbies,
+            skills,
+            teach,
+            dob,
+            learn,
+          });
+
+          return h
+            .response({
+              message: "Preference added successfully",
+              preference: newPreference,
+            })
+            .code(201);
+        }
       } catch (err) {
-        console.error("Error adding preference:", err);
-        return h.response({ message: "Failed to add preference" }).code(500);
+        console.error("Error adding/updating preference:", err);
+        return h
+          .response({ message: "Failed to add or update preference" })
+          .code(500);
       }
     },
   });
@@ -154,7 +181,7 @@ export const registerPlayRoutes = async (server: Server) => {
         // Fetch similar profiles
         const similarProfiles = await Preference.findAll({
           where: {
-            userEmail: { [Op.ne]: userEmail},
+            userEmail: { [Op.ne]: userEmail },
             [Op.or]: [
               literal(`JSON_OVERLAPS(hobbies, :userHobbies)`),
               literal(`JSON_OVERLAPS(skills, :userSkills)`),

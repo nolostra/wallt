@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 import "@/app/globals.css";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,6 +66,11 @@ const Login: React.FC = () => {
           >
             Login
           </button>
+          <Link href="/register">
+            <button className="w-full bg-blue-500 text-white font-semibold p-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out shadow-lg mt-5">
+              Register Me
+            </button>
+          </Link>
         </form>
       </div>
     </div>
